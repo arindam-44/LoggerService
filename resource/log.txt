@@ -1,0 +1,6 @@
+  {"id": "scsgra","state": "STARTED", "type": "applicationLog", "host": "12345", "timestamp": "1491377495212" }
+  { "id": "scsgrb", "state": "STARTED", "timestamp": "1491377495213" }
+  { "id": "scsgrc", "state": "FINISHED", "timestamp": "1491377495218" }
+  { "id": "scsgra", "state": "FINISHED",  "type": "applicationLog", "host": "12345","timestamp": "1491377495217"  }
+  {  "id": "scsgrc", "state": "STARTED","timestamp": "1491377495210"}
+  { "id": "scsgrb", "state": "FINISHED", "timestamp": "1491377495216" }
