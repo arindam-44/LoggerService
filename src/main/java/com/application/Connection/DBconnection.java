@@ -10,6 +10,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.application.Entity.Log;
+import com.application.constant.IAppConstant;
 /**
  * Class for DB operation
  * @author 
@@ -22,8 +23,9 @@ public class DBconnection {
 	/**
 	 * Data base connection
 	 * @return Connection
+	 * @throws SQLException 
 	 */
-	public static Connection getConnection() {
+	public static Connection getConnection() throws SQLException {
 		logger.debug("Db connection started");
 		long start = System.currentTimeMillis();
 		Connection con = null;
@@ -44,14 +46,17 @@ public class DBconnection {
 	 * @param log
 	 * @param diff
 	 * @param alert
+	 * @throws SQLException 
 	 */
-	public static int dbUpdate(Log log, long diff, String alert) {	
+	public static int dbUpdate(Log log, long diff, String alert) throws SQLException {	
 	 	   Statement stmt = null;
+	 	  Connection conn = null;
 	 	      int result1 = 0;
 	 	     logger.debug("Db update method started");
 	 	    long start = System.currentTimeMillis();
 	       try {
-	    	   Connection conn= DBconnection.getConnection();
+	    	   conn = getConnection();
+	    	   tableCreation(conn); // Logic to create table if not exist
 			stmt = conn.createStatement();
 			result1 = stmt.executeUpdate(" INSERT INTO logging_table " +
 		             " VALUES ( '" + log.getId() +"', "
@@ -63,10 +68,39 @@ public class DBconnection {
 		       conn.commit(); 
 		} catch (SQLException e) {
 			logger.error("Record update error " + e);
+		}finally {
+			conn.close();
 		}
 	       long finish = System.currentTimeMillis();
 	         long timeElapsed = finish - start;
 	       logger.debug("Db update method End , took - " +timeElapsed + " ms");
+	       return result1;
+	    }	
+	
+	/**
+	 * Logic to create table if not exist
+	 * @param log
+	 * @param diff
+	 * @param alert
+	 * @throws SQLException 
+	 */
+	public static int tableCreation(Connection conn ) throws SQLException {	
+	 	   Statement stmt = null;
+	 	  
+	 	      int result1 = 0;
+	 	     logger.debug("Db Table creartion method started");
+	 	    long start = System.currentTimeMillis();
+	       try {
+			stmt = conn.createStatement();
+			result1 = stmt.executeUpdate(IAppConstant.QUERY );
+			logger.debug("Table creation done " );
+		       conn.commit(); 
+		} catch (SQLException e) {
+			logger.error("Table creation error " + e);
+		}
+	       long finish = System.currentTimeMillis();
+	         long timeElapsed = finish - start;
+	       logger.debug("Db Table creartion , took - " +timeElapsed + " ms");
 	       return result1;
 	    }	
 }
